@@ -31,8 +31,6 @@ JWT_REFRESH_EXPIRY=30d
 
 You can create a `.env` file in the root directory of the project and add the above environment variables with your specific values.
 
-...
-
 4. Run the application: `yarn dev`
 
 ## Routes
