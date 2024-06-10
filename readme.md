@@ -6,10 +6,7 @@ This is a RESTful API built with TypeScript, Sequelize, and PostgreSQL. The API 
 
 1. Clone the repository
 2. Install dependencies: `yarn install`
-3. Set up the environment variables
-   ...
-
-The application requires the following environment variables to be set:
+3. Set up the environment variables, application requires the following environment variables to be set:
 
 ```
 EXPRESS_PORT=3009
