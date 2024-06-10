@@ -7,7 +7,7 @@ import {
   checkPassword,
   createByUname,
   findOrCreateByGoogleId,
-} from "../services/user";
+} from "../services/userService";
 // const { GOOGLE_AUTH_SUCCESS_URL } = process.env;
 
 export const googleLogin = async (

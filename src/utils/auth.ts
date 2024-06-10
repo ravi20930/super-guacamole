@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models";
+import User from "../models/user.model";
 
 const {
   JWT_ACCESS_SECRET,
@@ -19,7 +19,7 @@ export const generateToken = (user: User, tokenType: string): string | null => {
     (tokenType === "refresh" ? JWT_REFRESH_EXPIRY : JWT_ACCESS_EXPIRY) || "1d";
 
   const token: string | null = jwt.sign(
-    { id: user.id, user_type: user.email },
+    { id: user.id, user_type: user.name },
     secret,
     {
       expiresIn: expiry,
@@ -32,7 +32,7 @@ export const generateToken = (user: User, tokenType: string): string | null => {
 export const getUserReqObject = (user: User) => {
   return {
     id: user.id,
-    googleId: user.googleId,
+    name: user.name,
   };
 };
 

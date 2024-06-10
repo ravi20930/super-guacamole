@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../models";
 import { getUserReqObject, verify } from "../utils/auth";
 import { throwError } from "../utils/handler";
+import User from "../models/user.model";
 
 const { JWT_ACCESS_SECRET, NODE_ENV } = process.env;
 
