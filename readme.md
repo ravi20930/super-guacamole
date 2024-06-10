@@ -6,7 +6,35 @@ This is a RESTful API built with TypeScript, Sequelize, and PostgreSQL. The API 
 
 1. Clone the repository
 2. Install dependencies: `yarn install`
-3. Set up the database and update the configuration in `src/config/database.ts`
+3. Set up the environment variables
+   ...
+
+## Environment Variables
+
+The application requires the following environment variables to be set:
+
+```
+EXPRESS_PORT=3009
+NODE_ENV=development
+DB_SYNC_FLAG=true
+# Database dev
+DB_CONNECTION=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_DATABASE=postgres
+DB_USERNAME=postgr
+DB_PASSWORD=jkbfs
+# jwt
+JWT_ACCESS_SECRET=i2d9LNbO9bNM8sZOcYCMa0X4GO8Ize9OEHSfozH61HRxFIcAWADvRxiHtHqEeefg
+JWT_ACCESS_EXPIRY=7d
+JWT_REFRESH_SECRET=i2d9LNbO9bNM8sZOcYCM54678O8Ize9OEHSfozH61HRxFIcAWADvRxiHtHqEeefg
+JWT_REFRESH_EXPIRY=30d
+```
+
+You can create a `.env` file in the root directory of the project and add the above environment variables with your specific values.
+
+...
+
 4. Run the application: `yarn dev`
 
 ## Routes
