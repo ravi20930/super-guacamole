@@ -1,69 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { log, error } from "../utils/logger";
 import { responseHandler, throwError } from "../utils/handler";
-import { generateOAuthClient, generateOAuthUrl } from "../config/google";
 import { generateToken } from "../utils/auth";
-import {
-  checkPassword,
-  createByUname,
-  findOrCreateByGoogleId,
-} from "../services/userService";
-// const { GOOGLE_AUTH_SUCCESS_URL } = process.env;
-
-export const googleLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<Response | undefined> => {
-  try {
-    const scopes: string[] = [
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/userinfo.email",
-    ];
-    const authUrl = generateOAuthUrl({
-      state: "null",
-      scopes,
-    });
-    const response = responseHandler(200, "Google auth URL.", authUrl);
-    return res.status(response.statusCode).json(response);
-  } catch (err) {
-    error(req, err);
-    next(err);
-  }
-};
-
-export const googleSignInCallback = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { code } = req.query;
-
-    const { tokens } = await generateOAuthClient().getToken(code as string);
-
-    // Get user info from Google
-    const userInfo = await generateOAuthClient().getTokenInfo(
-      tokens.access_token ?? ""
-    );
-    console.log("userInfo", userInfo);
-
-    const user = await findOrCreateByGoogleId(
-      userInfo.sub ?? "",
-      userInfo.email ?? ""
-    );
-
-    const token = generateToken(user, "access");
-
-    const response = responseHandler(200, "Google sign in successful.", {
-      token,
-    });
-    res.status(response.statusCode).json(response);
-  } catch (err) {
-    error(req, err);
-    next(err);
-  }
-};
+import { checkPassword, createUser } from "../services/userService";
 
 export const signUp = async (
   req: Request,
@@ -71,11 +10,12 @@ export const signUp = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     if (!email || !password) {
-      throwError(400, "Username and password are required");
+      throwError(400, "Email and password are required");
     }
-    await createByUname(email, password);
+    log("Creating new user: {}");
+    await createUser(email, password, role);
     const response = responseHandler(200, "User successfully created.");
     res.status(response.statusCode).json(response);
   } catch (err) {

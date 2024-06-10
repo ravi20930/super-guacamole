@@ -1,7 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import { responseHandler } from "../utils/handler";
 import * as candidateService from "../services/candidateService";
 
-export const createCandidateResponse = async (req: Request, res: Response) => {
+export const createCandidateResponse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userId, skillId, difficultyLevel, question, response } = req.body;
   try {
     const candidateResponse = await candidateService.createCandidateResponse(
@@ -11,25 +16,43 @@ export const createCandidateResponse = async (req: Request, res: Response) => {
       question,
       response
     );
-    res.status(201).json(candidateResponse);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create candidate response" });
+    const apiResponse = responseHandler(
+      201,
+      "Candidate response created successfully",
+      candidateResponse
+    );
+    res.status(apiResponse.statusCode).json(apiResponse);
+  } catch (err) {
+    next(err);
   }
 };
 
-export const getCandidateResponses = async (req: Request, res: Response) => {
+export const getCandidateResponses = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const userId = parseInt(req.params.userId);
   try {
     const candidateResponses = await candidateService.getCandidateResponses(
       userId
     );
-    res.status(200).json(candidateResponses);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch candidate responses" });
+    const response = responseHandler(
+      200,
+      "Candidate responses fetched successfully",
+      candidateResponses
+    );
+    res.status(response.statusCode).json(response);
+  } catch (err) {
+    next(err);
   }
 };
 
-export const rateCandidate = async (req: Request, res: Response) => {
+export const rateCandidate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const responseId = parseInt(req.params.id);
   const { rating } = req.body;
   try {
@@ -38,22 +61,37 @@ export const rateCandidate = async (req: Request, res: Response) => {
       rating
     );
     if (ratedResponse) {
-      res.status(200).json(ratedResponse);
+      const response = responseHandler(
+        200,
+        "Candidate response rated successfully",
+        ratedResponse
+      );
+      res.status(response.statusCode).json(response);
     } else {
-      res.status(404).json({ error: "Candidate response not found" });
+      const response = responseHandler(404, "Candidate response not found");
+      res.status(response.statusCode).json(response);
     }
-  } catch (error) {
-    res.status(500).json({ error: "Failed to rate candidate" });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const getAggregatedSkillRating = async (req: Request, res: Response) => {
+export const getAggregatedSkillRating = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const userId = parseInt(req.params.userId);
   try {
     const aggregatedSkillRating =
       await candidateService.getAggregatedSkillRating(userId);
-    res.status(200).json(aggregatedSkillRating);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch aggregated skill rating" });
+    const response = responseHandler(
+      200,
+      "Aggregated skill rating fetched successfully",
+      aggregatedSkillRating
+    );
+    res.status(response.statusCode).json(response);
+  } catch (err) {
+    next(err);
   }
 };

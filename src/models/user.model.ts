@@ -2,9 +2,11 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../config/database";
 
 interface UserAttributes {
-  id: number;
-  name: string;
+  id?: number;
+  email: string;
+  name?: string;
   role: "candidate" | "reviewer";
+  password: string;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -15,6 +17,8 @@ class User
 {
   public id!: number;
   public name!: string;
+  public email!: string;
+  public password!: string;
   public role!: "candidate" | "reviewer";
 }
 
@@ -25,9 +29,17 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     role: {
       type: DataTypes.ENUM("candidate", "reviewer"),

@@ -33,6 +33,7 @@ export const getUserReqObject = (user: User) => {
   return {
     id: user.id,
     name: user.name,
+    role: user.role,
   };
 };
 

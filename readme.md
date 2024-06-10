@@ -5,36 +5,70 @@ This is a RESTful API built with TypeScript, Sequelize, and PostgreSQL. The API 
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies: `npm install`
-3. Set up the database and update the configuration in `src/config/config.ts`
-4. Run the application: `npm start`
+2. Install dependencies: `yarn install`
+3. Set up the database and update the configuration in `src/config/database.ts`
+4. Run the application: `yarn dev`
 
 ## Routes
 
-### User Routes
+### Authentication Routes
 
-#### `POST /api/users`
+#### `POST /api/auth/signup`
 
-Create a new user.
+Create a new user account.
 
 **Payload**:
 
 ```json
 {
-  "name": "John Doe",
+  "email": "user@example.com",
+  "password": "mypassword",
   "role": "candidate"
 }
 ```
 
-#### `GET /api/users`
+#### `POST /api/auth/signin`
+
+Sign in with an existing user account.
+
+**Payload**:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "mypassword"
+}
+```
+
+On successful sign-in, the response will contain an access token:
+
+```json
+{
+  "statusCode": 200,
+  "message": "Sign in successful.",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+This access token should be included in the `Authorization` header for authenticated routes:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### User Routes
+
+#### `GET /api/user/`
 
 Get a list of all users.
 
-#### `GET /api/users/:id`
+#### `GET /api/user/:id`
 
 Get a user by ID.
 
-#### `PUT /api/users/:id`
+#### `PUT /api/user/:id`
 
 Update a user's information.
 
@@ -47,13 +81,13 @@ Update a user's information.
 }
 ```
 
-#### `DELETE /api/users/:id`
+#### `DELETE /api/user/:id`
 
 Delete a user by ID.
 
 ### Candidate Routes
 
-#### `POST /api/candidate-responses`
+#### `POST /api/user/candidate-responses`
 
 Create a new candidate response.
 
@@ -69,11 +103,11 @@ Create a new candidate response.
 }
 ```
 
-#### `GET /api/candidate-responses/:userId`
+#### `GET /api/user/candidate-responses/:userId`
 
 Get a list of candidate responses for a specific user.
 
-#### `PUT /api/candidate-responses/:id/rate`
+#### `PUT /api/user/candidate-responses/:id/rate`
 
 Rate a candidate's response.
 
@@ -85,13 +119,9 @@ Rate a candidate's response.
 }
 ```
 
-#### `GET /api/candidate-responses/:userId/rating`
+#### `GET /api/user/candidate-responses/:userId/rating`
 
 Get the aggregated skill rating for a specific user.
-
-### Authentication Routes
-
-You'll need to implement the authentication routes based on the library or method you choose.
 
 ## Payload Explanations
 
@@ -118,6 +148,9 @@ The application uses two main tables:
    - `id` (integer, primary key)
    - `name` (string)
    - `role` (enum: 'candidate', 'reviewer')
+   - `name` (string: 'Ravi')
+   - `email` (string: 'ravi@gmail.com')
+   - `password` (string: '$2b$10$xu/cuj22KYFkdfIJF5hA8.UQpETmXXBAyckNpgyYYdnop9BecuYg.')
 
 2. `candidateResponses`:
    - `id` (integer, primary key)
