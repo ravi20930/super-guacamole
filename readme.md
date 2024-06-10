@@ -9,8 +9,6 @@ This is a RESTful API built with TypeScript, Sequelize, and PostgreSQL. The API 
 3. Set up the environment variables
    ...
 
-## Environment Variables
-
 The application requires the following environment variables to be set:
 
 ```
